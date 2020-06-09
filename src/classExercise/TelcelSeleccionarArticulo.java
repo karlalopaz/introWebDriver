@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TelcelSeleccionarArticulo {
@@ -21,14 +22,11 @@ public class TelcelSeleccionarArticulo {
         
     }
 
-
-
-
     private static void navegarSitio(String url) {
         driver = new ChromeDriver();
-        driver.navigate().to(url);
+        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-
+        driver.navigate().to(url);
     }
 
     private static void verificarLandingPage() {
@@ -51,29 +49,69 @@ public class TelcelSeleccionarArticulo {
 
     private static void listarTelefonos() {
 
-        //linkTelefonosCelulares: css= ".dropdown-menu [href='/personas/equipos/telefonos-y-smartphones']]"
-        //
-        //ModalSeleccionEstado: css=".modal-dialog.modal-lg"
-        //seleccionaEstadoDropdown: css=".chosen-single span"
-        //
-        //campoBusquedaEstado: css=".chosen-search input"
-        //
-        //ligaEstado: css=".chosen-results.active-result"
-        //
-        //botonEntrar:css="#entrarPerfilador"
         WebElement tiendaEnLinea = driver.findElement(By.cssSelector("[data-nombreboton='Tienda en linea superior']"));
         tiendaEnLinea.click();
         WebElement linkTelefonosCelulares = driver.findElement(By.cssSelector(".shortcut-container [data-nombreboton='Telefonos y smartphones']"));
         linkTelefonosCelulares.click();
+
     }
+
     private static void seleccionarEstado(String nombreEstado) {
+
+        System.out.println("breakpoint para verificar la pagina");
+        WebElement seleccionaEstadoDropdown = driver.findElement(By.cssSelector(".modal .chosen-single"));
+        if (seleccionaEstadoDropdown.isDisplayed()) {
+            seleccionaEstadoDropdown.click();
+        }
+        else
+            {
+            System.out.println("Fallo el modal");
+            System.exit(-1);
+            }
+        WebElement textBoxEstado = driver.findElement(By.cssSelector(".chosen-search input"));
+        textBoxEstado.sendKeys(nombreEstado);
+        WebElement opcionEstado = driver.findElement(By.cssSelector(".chosen-results li"));
+        opcionEstado.click();
+        WebElement botonEntrar = driver.findElement(By.id("entrarPerfilador"));
+        botonEntrar.click();
     }
+
     private static void verificarPaginaResultados() {
+        List<WebElement> celulares = driver.findElements(By.cssSelector(".comp-telcel-mosaico-equipos li"));
+        System.out.println(celulares.size());
+        if (celulares.size() >1 ){
+            System.out.println("La lista se desplego correctamente");
+        }
     }
     private static Celular capturarDatosCelular(int i) {
-        return null;
+        WebElement textoMarcaModelo = driver.findElement(By.cssSelector(".telcel-mosaico-equipos-marca"));
+        String mm = textoMarcaModelo.getText();
+
+        WebElement textoNombre = driver.findElement(By.cssSelector(".telcel-mosaico-equipos-nombre-equipo"));
+        String nombreEquipo = textoNombre.getText();
+
+
+        WebElement textoPrecio = driver.findElement(By.cssSelector(".telcel-mosaico-equipos-precio"));
+        String precioEquipo = textoPrecio.getText();
+        precioEquipo = precioEquipo.replace(",", "");
+        precioEquipo = precioEquipo.replace("$", "");
+        double pe = Double.parseDouble(precioEquipo);
+
+
+        WebElement textoCapacidad = driver.findElement(By.cssSelector(".telcel-mosaico-equipos-capacidad-numero"));
+        String capacidadEquipo = textoCapacidad.getText();
+        String[] datos = capacidadEquipo.split(" ");
+        String capacidadString = datos[0];
+        int numGigas = Integer.parseInt(capacidadString);
+
+
+        return new Celular(mm, nombreEquipo, pe, numGigas);
     }
     private static void seleccionarCelular(int numeroCelular) {
+        List<WebElement> celulares = driver.findElements(By.cssSelector(".comp-telcel-mosaico-equipos li"));
+        System.out.println(celulares.size());
+        WebElement celular = celulares.get(numeroCelular - 1);
+        celular.click();
     }
     private static void validarDatosCelular(Celular primerCelular) {
     }

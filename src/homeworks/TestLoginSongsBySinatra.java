@@ -20,8 +20,10 @@ public class TestLoginSongsBySinatra {
 
     private static void navegarSitio(String url) {
         driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.navigate().to(url);
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+
     }
 
     private static void verificarLandingPage() {
