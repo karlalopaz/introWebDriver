@@ -16,7 +16,7 @@ public class ParentTest {
 		//System.setProperty("webdriver.chrome.driver", "C:\\automation\\drivers\\chromedriver.exe");  //propiedad explorador chrome		
 		driver = new ChromeDriver();  //driver de chrome
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		driver.navigate().to("http:\\imdb.com");//navegar a la pagina de IMDB.com
+		driver.navigate().to("http:\\facebook.com");//navegar a la pagina de IMDB.com
 	}
 
 	public static void clickElement(By elementLocator) {
@@ -24,7 +24,7 @@ public class ParentTest {
 	}
 
 	public static void inputText(By elementLocator, String text) {
-		driver.findElement(elementLocator).sendKeys(text);
+		driver.findElement(elementLocator).sendKeys(text); //busco el elemento Locator
 	}
 
 	public static void verifyLinkExists(String linkText) {
@@ -39,7 +39,7 @@ public class ParentTest {
 
 	public static void testMovieSearch(String movieName, String movieStar, String movieYear) {
 
-		inputText(searchBoxLocator, movieName);						
+		inputText(searchBoxLocator, movieName);	//abre el metodo de Input Text
 		clickElement(searchButtonLocator);
 
 		//Verificar que exista un link de esa pelicula	
