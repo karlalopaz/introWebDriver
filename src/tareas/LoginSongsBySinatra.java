@@ -11,8 +11,8 @@ public class LoginSongsBySinatra  extends SongsBySinatraParent
         navegarSitio("http://evening-bastion-49392.herokuapp.com/");
         validarHomePage("Welcome to to this website all about the songs of the great Frank Sinatra");
         hacerLogin("frank", "sinatra");
-        validarHomePage();
-        validarMensajeBienvendia("You are now logged in as frank");
+        validarMensajeLogin("You are now logged in as frank");
+        validarSongsPage ();
         cerrarBrowser();
     }
 }

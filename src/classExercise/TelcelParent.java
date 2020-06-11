@@ -5,6 +5,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,20 +15,22 @@ import java.util.concurrent.TimeUnit;
 public class TelcelParent
 {
 static WebDriver driver;
+static WebDriverWait wait;
 
     public static void navegarSitio(String url)
     {
         driver = new ChromeDriver(); //abrir el navegador
         driver.manage().window().maximize(); //maximizar la pantalla
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS); //hacer espera de 30 seg y cada que usas el driver, se usa en todas las
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); //hacer espera de 30 seg y cada que usas el driver, se usa en todas las
         //instrucciones, modificas el comportamiento del driver.
+        wait = new WebDriverWait(driver, 10);
         driver.navigate().to(url); // ir a la url
     }
     public static void verificarLandingPage()
     {
         // verificar que existan logoTelcel, tiendaEnLinea, campoBusqueda y asegurarnos que esta visible
 
-        WebElement logoTelcel = driver.findElement(By.cssSelector("[src='/content/dam/htmls/img/icons/logo-telcel.svg']"));
+        WebElement logoTelcel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[src='/content/dam/htmls/img/icons/logo-telcel.svg']")));
         WebElement tiendaEnLinea = driver.findElement(By.cssSelector("[data-nombreboton='Tienda en linea superior']"));
         WebElement campoBusqueda = driver.findElement(By.cssSelector("#buscador-menu-input"));
 
@@ -51,13 +56,8 @@ static WebDriver driver;
 
         System.out.println("breakpoint para verificar la pagina"); //imprime mensaje para verificar la pagina
         //busca elemento modal para seleccionar estado
-        WebElement seleccionaEstadoDropdown = driver.findElement(By.cssSelector(".modal .chosen-single"));
-        if (seleccionaEstadoDropdown.isDisplayed()) {
-            seleccionaEstadoDropdown.click(); //si se encuentra el estado, le da click
-        } else {
-            System.out.println("Fallo el modal"); //mensaje de fallo
-            System.exit(-1);
-        }
+        WebElement seleccionaEstadoDropdown = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".modal .chosen-single")));
+        seleccionaEstadoDropdown.click();
 
         //busca elementos: text box, opcion del estado y boton de entrar
         WebElement textBoxEstado = driver.findElement(By.cssSelector(".chosen-search input"));
@@ -71,7 +71,9 @@ static WebDriver driver;
     public static void verificarPaginaResultados()
     {
         //busca elementos celulares y los guarda en una lista
+        WebElement esperaCargaCel = wait.until((ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".comp-telcel-mosaico-equipos li"))));
         List<WebElement> celulares = driver.findElements(By.cssSelector(".comp-telcel-mosaico-equipos li"));
+        esperaCargaCel = null;
         System.out.println(celulares.size());
         if (celulares.size() > 1) {
             System.out.println("La lista se desplego correctamente"); //imprime si la lista de celulares se desplego correctamente
@@ -82,7 +84,7 @@ static WebDriver driver;
     {
         //busca el elemento marcaModelo, nombre, precio y capacidad
 
-        WebElement textoMarcaModelo = driver.findElement(By.cssSelector(".telcel-mosaico-equipos-marca"));
+        WebElement textoMarcaModelo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".telcel-mosaico-equipos-marca")));
         String mm = textoMarcaModelo.getText(); //guarda el elemento en una variable
 
         WebElement textoNombre = driver.findElement(By.cssSelector(".telcel-mosaico-equipos-nombre-equipo"));
