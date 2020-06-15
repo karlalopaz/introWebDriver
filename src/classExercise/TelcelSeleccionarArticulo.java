@@ -14,6 +14,6 @@ public class TelcelSeleccionarArticulo extends TelcelParent
         Celular primerCelular = capturarDatosCelular(1);
         seleccionarCelular(1);
         validarDatosCelular(primerCelular);
-       // cerrarBrowser();
+        cerrarBrowser();
     }
 }

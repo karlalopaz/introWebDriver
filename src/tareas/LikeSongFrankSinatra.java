@@ -13,8 +13,10 @@ public class LikeSongFrankSinatra extends LikeSongParent {
         hacerLogin("frank", "sinatra");
         validarMensajeLogin("You are now logged in as frank");
         validarSongsPage ();
-        seleccionarCancion();
+        seleccionarCancion(2);
         darLike();
+        logOut();
+        validarLogout("You have now logged out");
         cerrarBrowser();
     }
 }
